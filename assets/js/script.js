@@ -1,3 +1,5 @@
+// declare reference to the HTML file
+const addTaskButton = $('#addTaskButtonId'); 
 // Retrieve tasks and nextId from localStorage
 let taskList = JSON.parse(localStorage.getItem("tasks"));
 let nextId = JSON.parse(localStorage.getItem("nextId"));
@@ -14,11 +16,13 @@ function createTaskCard(task) {
 
 // Todo: create a function to render the task list and make cards draggable
 function renderTaskList() {
+    console.log('hola mundo desde render');
 
 }
 
 // Todo: create a function to handle adding a new task
 function handleAddTask(event){
+    console.log('hola mundo desde handle addtask');    
 
 }
 
@@ -32,7 +36,14 @@ function handleDrop(event, ui) {
 
 }
 
+// add a listener for the Add Task Button
+// ? Add event listener to the form element, listen for a submit event, and call the `handleProjectFormSubmit` function.
+// addTaskButton.on('submit', createTaskCard);
+
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
 $(document).ready(function () {
+ console.log('hola mundo desde ready');
+ renderTaskList();
+ addTaskButton.on('submit', handleAddTask);
 
 });
