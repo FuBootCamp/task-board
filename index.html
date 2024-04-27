@@ -22,10 +22,35 @@
   </header>
   <div class="container">
     <div class="text-center mb-5">
-      <button id="addTaskButtonId" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#formModal">Add Task</button>
+      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#formModal">Add Task</button>
     </div>
-
+    
     <!-- Todo: Create a modal with a form to add tasks -->
+    <div class="modal" id="formModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+      
+            <div class="modal-header">
+              <h4 class="modal-title">Add Task</h4>
+              <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <form>
+                    <label for="Task Title">Title</label>
+                    <input type="text">
+                </form>
+            </div>
+      
+            <div class="modal-footer">
+              <button id = "addTaskButton" type="button" class="btn btn-primary" data-bs-dismiss="modal">Add task</button>
+            </div>
+      
+          </div>
+        </div>
+      </div>     
+    <!-- end of modal insertion -->
+
     <div class="row swim-lanes text-center justify-content-between">
       <div class="col-12 col-lg-4 d-flex">
         <div id="to-do" class="card border-light mb-3 lane flex-grow-1">
@@ -68,7 +93,7 @@
   <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.3/dayjs.min.js"
     integrity="sha256-iu/zLUB+QgISXBLCW/mcDi/rnf4m4uEDO0wauy76x7U=" crossorigin="anonymous"></script>
 
-  <script src="./assets/js/script2.js"></script>
+  <script src="./assets/js/script3.js"></script>
 </body>
 
 </html>
