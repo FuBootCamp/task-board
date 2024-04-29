@@ -33,34 +33,46 @@ function generateTaskId() {
 
 // Create a task card adding elements to the HTML document
 function createTaskCard(oneTaskArray) {
-    console.log('Creating a task CARD');
-    console.log(oneTaskArray);
+    // Definnig the elements and their values
     const taskCard = $('<div>').addClass('card task-card draggable my-3').attr('data-task-id', oneTaskArray.id);
     const cardHeader = $('<div>').addClass('card-header h4').text(oneTaskArray.title);
     const cardBody = $('<div>').addClass('card-body');
     const cardDueDate = $('<p>').addClass('card-text').text(oneTaskArray.duedate);
     const cardDescription = $('<p>').addClass('card-text').text(oneTaskArray.description);
     const cardDeleteButton = $('<button>').addClass('btn-danger delete').text('Delete').attr('data-task-id', oneTaskArray.id);
-
+    cardDeleteButton.on('click', handleDeleteTask);
+    // adding elements
     cardBody.append(cardDueDate,cardDescription,cardDeleteButton);
-      //  Append the card header and card body to the card.
     taskCard.append(cardHeader, cardBody);
-    console.log('Task CARD created');
+
+    // Defining the color of the task on the basis of dates
+    const now = dayjs();
+    const taskDueDate = dayjs(oneTaskArray.duedate, 'DD/MM/YYYY');
+    if (oneTaskArray.status !== "done") {
+        if (now.isSame(taskDueDate, 'day')) {
+            taskCard.addClass('bg-warning text-white');
+        } else if (now.isAfter(taskDueDate)) {
+                   taskCard.addClass('bg-danger text-white');
+                   cardDeleteButton.addClass('border-light');
+        }
+    }
     return taskCard;
 }
 
-// Render the task list and make cards draggable
+// Render the task list depending on their status and make cards draggable
 function renderTaskList() {
-    console.log('render tasks');
-    
-    const todoList = $('#todo-cards');
+        const todoList = $('#todo-cards');
     const inProgressList = $('#in-progress-cards');
     const doneList = $('#done-cards');
     
+    // Initializing the list for every status
     todoList.empty();
     inProgressList.empty();
     doneList.empty();
     
+    // A loop for the existing task
+    // Adding the task to the corresponding list
+
     for (let index = 0; index < ArrayofTasks.length; index++) {
       console.log('for loop');
       console.log(ArrayofTasks.length);
@@ -73,7 +85,8 @@ function renderTaskList() {
                            } 
     }
 
-    $(".draggable").draggable({
+    // Doing draggable with the API
+      $(".draggable").draggable({
       opacity: 0.7,
       zIndex:100,
       helper: function (e) {
@@ -94,12 +107,12 @@ function handleAddTask(event){
     if ((String(inputTaskTitle.value) === '') ||
       (String(inputTaskDuedate.value) === '') ||
       (String(inputTaskDescription.value) === '')) {
-      // show message incomplete form
-      alert('Inclomplete TASK, please review');
+      // validating no empty inpujts annd incase show message incomplete form
+      alert('The TASK form is inclomplete, please review');
        }
       else {
+            // Loading onputs to the one task array
             oneTaskArray = {
-            // generating a unique id for the task
             "id":generateTaskId(),
             "title": String(inputTaskTitle.value),
             "duedate": String(inputDueDate.value),
@@ -116,15 +129,28 @@ function handleAddTask(event){
             // push to the local storage
             localStorage.setItem('tasks',JSON.stringify(ArrayofTasks));
             renderTaskList();
-            //  ? initilizing inputs
+            //  Initilizing inputs
+            inputTaskTitle.value = '';
+            inputTaskDuedate.value = '';
+            inputTaskDescription.value = '';
           };
 }
 
-// Todo: create a function to handle deleting a task
+// Handle deleting a task
 function handleDeleteTask(event){
-}
 
-// Todo: create a function to handle dropping a task into a new status lane
+    const taskId = $(this).attr('data-task-id');
+    for (let index = 0; index < ArrayofTasks.length; index++) {
+        if  (ArrayofTasks[index].id === taskId) {
+          ArrayofTasks.splice(index,1);
+        }
+    }
+    localStorage.setItem('tasks',JSON.stringify(ArrayofTasks));
+    renderTaskList();
+  }
+
+
+// Handle dropping a task into a new status lane
 function handleDrop(event, ui) {
     const taskId = ui.draggable[0].dataset.taskId;
     const newStatus = event.target.id;
@@ -140,7 +166,8 @@ function handleDrop(event, ui) {
     renderTaskList();
 }
 
-// Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
+// loading the page.
+// Load data from localstorage (if not empty), add listener for the add task button, date picker and drop  
 $(document).ready(function () {
     console.log('Page loaded');
     if (localStorage.tasks.length > 0) {
@@ -151,14 +178,11 @@ $(document).ready(function () {
               }
     renderTaskList();
     addTaskButtonEl.addEventListener('click', handleAddTask);
-
-
     // Date API
     $('#inputDueDate').datepicker({
       changeMonth: true,
       changeYear:true,
     });
-
     // Droppable API 
     $('.lane').droppable({
       accept: '.draggable',
