@@ -1,15 +1,16 @@
-// make references to the HTML
+// references to the HTML
 const addTaskButtonEl = document.getElementById("addTaskButton");
 const inputTaskTitle = document.getElementById("inputTitle");
+const inputTaskDuedate = document.getElementById("inputDueDate");
+const inputTaskDescription = document.getElementById("inputDescription");
 
-// Retrieve tasks and nextId from localStorage
-// let taskList = JSON.parse(localStorage.getItem("tasks"));
-// let nextId = JSON.parse(localStorage.getItem("nextId"));
 
-// An array for the tasks
+// An array for TASKS
 let ArrayofTasks = [
     { id:String,
       title:String,
+      duedate:Date,
+      description:String,
       status:String
     }
 ];
@@ -18,36 +19,37 @@ let ArrayofTasks = [
  let oneTaskArray = [
     { id:String,
       title:String,
+      duedate: Date,
+      description:String,
       status:String
     }
 ];
 
-// Todo: create a function to generate a unique task id
+// Generate an unique id
 function generateTaskId() {
-  // id: crypto.randomUUID()
+  const randomId = crypto.randomUUID();
+  return randomId;
 }
 
-// Todo: create a function to create a task card
+// Create a task card adding elements to the HTML document
 function createTaskCard(oneTaskArray) {
     console.log('Creating a task CARD');
     console.log(oneTaskArray);
-    const taskCard = $('<div>')
-    // .addClass('card task-card draggable my-3')
-    .addClass('card task-card draggable my-3')
-    .attr('data-task-id', oneTaskArray.id);
+    const taskCard = $('<div>').addClass('card task-card draggable my-3').attr('data-task-id', oneTaskArray.id);
     const cardHeader = $('<div>').addClass('card-header h4').text(oneTaskArray.title);
-    const cardBody = $('<div>').addClass('card-body').text(oneTaskArray.id);
-    const cardTitle = $('<p>').addClass('card-text').text(oneTaskArray.status);
-      // Append the card description, card due date, and card delete button to the card body.
-      // cardBody.append(cardDescription, cardDueDate, cardDeleteBtn);
-    cardBody.append(cardTitle);
+    const cardBody = $('<div>').addClass('card-body');
+    const cardDueDate = $('<p>').addClass('card-text').text(oneTaskArray.duedate);
+    const cardDescription = $('<p>').addClass('card-text').text(oneTaskArray.description);
+    const cardDeleteButton = $('<button>').addClass('btn-danger delete').text('Delete').attr('data-task-id', oneTaskArray.id);
+
+    cardBody.append(cardDueDate,cardDescription,cardDeleteButton);
       //  Append the card header and card body to the card.
     taskCard.append(cardHeader, cardBody);
     console.log('Task CARD created');
     return taskCard;
 }
 
-// Todo: create a function to render the task list and make cards draggable
+// Render the task list and make cards draggable
 function renderTaskList() {
     console.log('render tasks');
     
@@ -85,30 +87,38 @@ function renderTaskList() {
     });
 }
 
-// Todo: create a function to handle adding a new task
+// Handle to add a new task
 function handleAddTask(event){
     console.log('In handleaddtask function');
-    oneTaskArray = {
-      // generating a unique id for the task
-      "id":crypto.randomUUID(),
-      "title": String(inputTaskTitle.value),
-      "status": "to-do"
-      };
+
+    if ((String(inputTaskTitle.value) === '') ||
+      (String(inputTaskDuedate.value) === '') ||
+      (String(inputTaskDescription.value) === '')) {
+      // show message incomplete form
+      alert('Inclomplete TASK, please review');
+       }
+      else {
+            oneTaskArray = {
+            // generating a unique id for the task
+            "id":generateTaskId(),
+            "title": String(inputTaskTitle.value),
+            "duedate": String(inputDueDate.value),
+            "description": String(inputDescription.value),
+            "status": "to-do"
+            };
       
-      // recover data from local storage
-      if (localStorage.tasks.length > 0) {
-         ArrayofTasks = JSON.parse(localStorage.getItem("tasks"));
-      }          
-      // adding a row to the array of objets 
-      ArrayofTasks.push(oneTaskArray);
-      // push to the local storage
-      localStorage.setItem('tasks',JSON.stringify(ArrayofTasks));
-
-    renderTaskList();
-    console.log('end of handleaddtask function');
-    // initilizing inputs
+            // recover data from local storage
+            if (localStorage.tasks.length > 0) {
+                ArrayofTasks = JSON.parse(localStorage.getItem("tasks"));
+            }          
+            // adding a row to the array of objets 
+            ArrayofTasks.push(oneTaskArray);
+            // push to the local storage
+            localStorage.setItem('tasks',JSON.stringify(ArrayofTasks));
+            renderTaskList();
+            //  ? initilizing inputs
+          };
 }
-
 
 // Todo: create a function to handle deleting a task
 function handleDeleteTask(event){
@@ -142,7 +152,14 @@ $(document).ready(function () {
     renderTaskList();
     addTaskButtonEl.addEventListener('click', handleAddTask);
 
-    //  droppable lines
+
+    // Date API
+    $('#inputDueDate').datepicker({
+      changeMonth: true,
+      changeYear:true,
+    });
+
+    // Droppable API 
     $('.lane').droppable({
       accept: '.draggable',
       drop: handleDrop,
