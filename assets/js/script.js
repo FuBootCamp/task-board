@@ -178,11 +178,11 @@ $(document).ready(function () {
               }
     renderTaskList();
     addTaskButtonEl.addEventListener('click', handleAddTask);
-    // Date API
-    $('#inputDueDate').datepicker({
-      changeMonth: true,
-      changeYear:true,
-    });
+    // // Date API
+    // $('#inputDueDate').datepicker({
+    //   changeMonth: true,
+    //   changeYear:true,
+    // });
     // Droppable API 
     $('.lane').droppable({
       accept: '.draggable',
