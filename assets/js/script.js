@@ -61,7 +61,7 @@ function createTaskCard(oneTaskArray) {
 
 // Render the task list depending on their status and make cards draggable
 function renderTaskList() {
-        const todoList = $('#todo-cards');
+    const todoList = $('#todo-cards');
     const inProgressList = $('#in-progress-cards');
     const doneList = $('#done-cards');
     
@@ -74,8 +74,7 @@ function renderTaskList() {
     // Adding the task to the corresponding list
 
     for (let index = 0; index < ArrayofTasks.length; index++) {
-      console.log('for loop');
-      console.log(ArrayofTasks.length);
+
       if (ArrayofTasks[index].status === 'to-do') {
           todoList.append(createTaskCard(ArrayofTasks[index]));
           } else if (ArrayofTasks[index].status === 'in-progress') {
@@ -102,8 +101,7 @@ function renderTaskList() {
 
 // Handle to add a new task
 function handleAddTask(event){
-    console.log('In handleaddtask function');
-
+    // console.log('In handleaddtask function');
     if ((String(inputTaskTitle.value) === '') ||
       (String(inputTaskDuedate.value) === '') ||
       (String(inputTaskDescription.value) === '')) {
@@ -121,7 +119,7 @@ function handleAddTask(event){
             };
       
             // recover data from local storage
-            if (localStorage.tasks.length > 0) {
+            if (localStorage.getItem("tasks") !== null) {
                 ArrayofTasks = JSON.parse(localStorage.getItem("tasks"));
             }          
             // adding a row to the array of objets 
@@ -159,7 +157,7 @@ function handleDrop(event, ui) {
     for (let index = 0; index < ArrayofTasks.length; index++) { 
         if (ArrayofTasks[index].id === taskId) {
             ArrayofTasks[index].status = newStatus;
-            console.log('cambia estatus')
+            // console.log('cambia estatus')
         }
     }
     localStorage.setItem('tasks',JSON.stringify(ArrayofTasks));
@@ -169,13 +167,13 @@ function handleDrop(event, ui) {
 // loading the page.
 // Load data from localstorage (if not empty), add listener for the add task button, date picker and drop  
 $(document).ready(function () {
-    console.log('Page loaded');
-    if (localStorage.tasks.length > 0) {
+    // console.log('Page loaded');
+    if (localStorage.getItem("tasks") !== null) {
        ArrayofTasks = JSON.parse(localStorage.getItem("tasks"));
        } else {
               ArrayofTasks = [];
-              console.log('arranca vacio');
-              }
+              console.log('empty');
+              }         
     renderTaskList();
     addTaskButtonEl.addEventListener('click', handleAddTask);
     // // Date API
