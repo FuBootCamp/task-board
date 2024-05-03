@@ -45,7 +45,7 @@ function createTaskCard(oneTaskArray) {
     cardBody.append(cardDueDate,cardDescription,cardDeleteButton);
     taskCard.append(cardHeader, cardBody);
 
-    // Defining the color of the task on the basis of dates
+    // Defining the color of the task on the basis of dates using dayjs
     const now = dayjs();
     const taskDueDate = dayjs(oneTaskArray.duedate, 'DD/MM/YYYY');
     if (oneTaskArray.status !== "done") {
@@ -172,15 +172,11 @@ $(document).ready(function () {
        ArrayofTasks = JSON.parse(localStorage.getItem("tasks"));
        } else {
               ArrayofTasks = [];
-              console.log('empty');
+              // console.log('empty');
               }         
     renderTaskList();
     addTaskButtonEl.addEventListener('click', handleAddTask);
-    // // Date API
-    // $('#inputDueDate').datepicker({
-    //   changeMonth: true,
-    //   changeYear:true,
-    // });
+
     // Droppable API 
     $('.lane').droppable({
       accept: '.draggable',
